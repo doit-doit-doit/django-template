@@ -12,3 +12,7 @@ logging.basicConfig(level=logging.INFO)
 def health_check(request) :    
     logger.info("health checked.")
     return HttpResponse()
+
+@api_view(['GET'])
+def login(request):
+    return render(request, 'login.html')
