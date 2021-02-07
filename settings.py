@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'shoppingmall',
+    "user",
     'rest_framework',
 ]
 

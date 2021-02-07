@@ -12,10 +12,13 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_PORT: ${DB_PORT}
       DB_HOST: ${DB_HOST}
+      SECRET_KEY: ${SECRET_KEY}
+      DEBUG: ${DEBUG}
     volumes: 
       - .:/app/
     expose:
       - "8000"
+    command: python manage.py runserver 0.0.0.0:8000
     depends_on:
       - db
   db:
