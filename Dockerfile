@@ -13,5 +13,6 @@ COPY . /app
 
 # Install Python dependencies
 RUN pip3 install -r requirements.txt
+RUN pip install --upgrade pip
 
 EXPOSE 8000
