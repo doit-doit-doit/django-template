@@ -18,7 +18,7 @@ class CreateView(View):
 
         else:
             User.objects.create(email = data['email'], password = data['password'])
-            return JsonResponse({"message" : "회원으로 가입되셨습니다."}, status = 200)
+            return JsonResponse({"message" : "회원으로 가입되셨습니다."}, status = 200) 
 
     def get(self, request):
         users = User.objects.values()
