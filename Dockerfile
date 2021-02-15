@@ -12,7 +12,6 @@ WORKDIR /app
 COPY . /app
 
 # Install Python dependencies
-RUN pip3 install -r requirements.txt
-RUN pip install --upgrade pip
+RUN pip3 install -r requirements.txts
 
 EXPOSE 8000
