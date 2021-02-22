@@ -18,5 +18,4 @@ from django.urls import path, include
 
 urlpatterns = [
     path('v1/', include('shoppingmall.urls')),
-    path('v1/user/', include('user.urls')),
 ]
