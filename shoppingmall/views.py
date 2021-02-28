@@ -1,3 +1,4 @@
+import json
 import logging
 from django.shortcuts import render
 from rest_framework.decorators import api_view
@@ -32,10 +33,13 @@ def post(request):
 
 @api_view(['GET'])
 def board_list(request):
-    boards = get_board_list()
-    serializer = BoardsSerializer(boards, many=True)
-    boards_dict = serializer.data.dict()
-    boards_dict["attachments"] = "hi"
-    response = QueryDict('', mutable=True)
-    response.update(board_list)
-    return Response(response)
+    # boards = get_board_list()
+    # serializer = BoardsSerializer(boards, many=True)
+    # boards_dict = dict(serializer.data)
+    response = dict()
+    response['title'] = "타이틀"
+    response['name'] = "희수"
+    response['description'] = "내용"
+    response['attachments'] = ["img1", "img2", "img3"]
+    json_resposne = json.dumps(response, indent=4, sort_keys=True)
+    return Response(json_resposne)

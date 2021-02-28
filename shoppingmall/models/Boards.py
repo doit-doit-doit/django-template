@@ -15,15 +15,5 @@ class Boards(models.Model):
         managed = False
 
 def get_board_list():
-    print("0")
     boards = Boards.objects.all()
-    print(boards.values())
-    print("1")
-    boards_dict = dict(boards.values())
-    print("2")
-    boards_dict["attachments"] = "hi"
-    print("3")
-
-    modified_query_dict = QueryDict('', mutable=True)
-    m#odified_query_dict.update(boards_dict)
     return boards
