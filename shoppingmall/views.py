@@ -3,7 +3,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import *
-from .models import Boards
+from shoppingmall.models.Boards import *
 from shoppingmall.serializers import BoardsSerializer
 
 
@@ -32,6 +32,10 @@ def post(request):
 
 @api_view(['GET'])
 def board_list(request):
-    boards = Boards.objects.all()
+    boards = get_board_list()
     serializer = BoardsSerializer(boards, many=True)
-    return Response(serializer.data)
+    boards_dict = serializer.data.dict()
+    boards_dict["attachments"] = "hi"
+    response = QueryDict('', mutable=True)
+    response.update(board_list)
+    return Response(response)
