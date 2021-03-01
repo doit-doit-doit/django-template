@@ -17,3 +17,7 @@ class Boards(models.Model):
 def get_board_list():
     boards = Boards.objects.all()
     return boards
+
+def get_board_detail(id):
+    board = Boards.objects.filter(id=id)
+    return board
