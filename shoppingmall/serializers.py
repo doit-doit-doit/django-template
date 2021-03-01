@@ -15,7 +15,7 @@ class CommentsSerializer(serializers.ModelSerializer):
     #     return super(CommentsSerializer, self).to_representation(instance)
 
 class BoardsSerializer(serializers.ModelSerializer):
-    boards = CommentsSerializer(many=True, read_only=True)
+    attachments = CommentsSerializer(many=True, read_only=True)
     class Meta:
         model = Boards
         fields = [
@@ -23,7 +23,8 @@ class BoardsSerializer(serializers.ModelSerializer):
             'title',
             'name',
             'description',
-            'boards'
+            'created_time',
+            'attachments'
         ]
 
 # class BoardRepresentationSerializer(serializers.ModelSerializer) :

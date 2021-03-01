@@ -1,3 +1,4 @@
+import datetime
 import json
 import logging
 
@@ -14,6 +15,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import *
+from django.core.serializers import serialize
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -76,12 +78,33 @@ def board_list(request):
 
 @api_view(['GET'])
 def board_detail(request):
-    print("???")
     id = request.GET.get("id")
     board = get_board_detail(id)
-    print(board[0])
+    board_dict = dict()
+    for b in board.values()[0]:
+        if b == "created_time":
+            board_dict[b] = board.values()[0][b].strftime('%Y-%m-%d')
+            continue
+        board_dict[b] = board.values()[0][b]
+    
     comments = get_comment_by_id(id)
-    print(comments)
-    serializer = BoardsSerializer(board, many=True)
+    comment_list = list()
+    for c in comments:
+        comment_list.append(c.contents)
+
+    print(comment_list)
+
+    board_dict['attachments'] = comment_list
+    print(board_dict)
+
+    response = json.dumps(board_dict)
+    return HttpResponse(response, status=200, content_type="application/json")
+
+    # additional = json.loads(serialize('json', board_dict))
+    # return JsonResponse({'items': additional})
+
+    # add = board_list + comments_list
+    # print(add)
+    # serializer = BoardsSerializer(board, many=True)
     # serializer = CommentsSerializer(comments, many=True)
-    return Response(serializer.data, status=200)
+    # return Response(serializer.data, status=200)

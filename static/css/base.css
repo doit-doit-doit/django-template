@@ -1,0 +1,23 @@
+.heedoitdox_footer_logo {
+    font-family: 'Roboto Mono', monospace;
+}
+
+.heedoitdox_footer_button{
+    font-size: .6rem;
+}
+
+.heedoitdox_footer{
+    text-align:center; 
+    margin-top: 2rem;
+}
+
+.heedoitdox_header{
+    text-align:center; 
+    margin: 2rem 0;
+}
+
+.heedoitdox_header_logo{
+    font-family: 'Roboto Mono', monospace;
+}
+
+

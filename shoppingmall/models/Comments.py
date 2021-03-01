@@ -10,5 +10,4 @@ class Comments(models.Model):
 
 def get_comment_by_id(id):
     comments = Comments.objects.raw("select * from comments where id = 3")
-    print(comments)
     return comments
