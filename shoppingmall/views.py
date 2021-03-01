@@ -18,6 +18,9 @@ from django.http import *
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
+def hello_word(request):
+    return render(request, 'base.html')
+
 @api_view(['GET'])
 def health_check(request) :    
     logger.info("health checked.")

@@ -7,6 +7,7 @@ from . import views
 app_name = "shoppingmall"
 
 urlpatterns = [
+    path('helloworld', views.hello_word),
     path('healthcheck', views.health_check),
     path('login', views.login),
     path('post', views.post),
