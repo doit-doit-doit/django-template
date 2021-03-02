@@ -17,6 +17,8 @@ from rest_framework.response import Response
 from django.http import *
 from django.core.serializers import serialize
 
+from datetime import datetime
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
@@ -64,47 +66,35 @@ def commnet(request):
 
 @api_view(['GET'])
 def board_list(request):
-    additional = dict()
-    additional['count'] = 10
-    additional['list'] = ['팁스타운', '구의웰츠', '퓨처플레이']
+    response_dict = dict()
+    response_dict['board_list'] = dict()
     boards = get_board_list()
-    # serializer = BoardsSerializer(boards, many=True)
-    # data = json.loads(serialize('json', boards))
-    # additional_j = json.dumps(additional)
-    # additional = json.loads(serialize('json', additional_j))
-    # return JsonResponse({'additionals': additional,'items': data})
-    return HttpResponse(status=200)
+    board_list = list()
+    board_dict = dict()
+    for b in boards:
+        board_dict['id'] = b[0]
+        board_dict['title'] = b[1]
+        board_dict['name'] = b[2]
+        board_dict['description'] = b[3]
+        board_dict['created_time'] = b[4].strftime("%Y-%m-%d %H:%M:%S")
+        board_list.append(board_dict)
+        board_dict = dict()
+    response_dict['board_list'] = board_list
+    response = json.dumps(response_dict)
+    return HttpResponse(response, status=200, content_type="application/json")
     
 
 @api_view(['GET'])
 def board_detail(request):
     id = request.GET.get("id")
     board = get_board_detail(id)
+    board_list = list(board)
     board_dict = dict()
-    for b in board.values()[0]:
-        if b == "created_time":
-            board_dict[b] = board.values()[0][b].strftime('%Y-%m-%d')
-            continue
-        board_dict[b] = board.values()[0][b]
-    
-    comments = get_comment_by_id(id)
-    comment_list = list()
-    for c in comments:
-        comment_list.append(c.contents)
-
-    print(comment_list)
-
-    board_dict['attachments'] = comment_list
-    print(board_dict)
+    board_dict['id'] = board[0]
+    board_dict['title'] = board[1]
+    board_dict['name'] = board[2]
+    board_dict['description'] = board[3]
+    board_dict['created_time'] = board[4].strftime("%Y-%m-%d %H:%M:%S")
 
     response = json.dumps(board_dict)
     return HttpResponse(response, status=200, content_type="application/json")
-
-    # additional = json.loads(serialize('json', board_dict))
-    # return JsonResponse({'items': additional})
-
-    # add = board_list + comments_list
-    # print(add)
-    # serializer = BoardsSerializer(board, many=True)
-    # serializer = CommentsSerializer(comments, many=True)
-    # return Response(serializer.data, status=200)

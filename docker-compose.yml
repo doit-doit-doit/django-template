@@ -1,6 +1,15 @@
 version: '3.7'
 
 services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - .:/app
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - app
   app:
     build: 
       context: .
@@ -16,9 +25,11 @@ services:
       DEBUG: ${DEBUG}
     volumes: 
       - .:/app/
-    ports:
-      - "8000:8000"
-    command: python manage.py runserver 0.0.0.0:8000
+    # ports:
+    #   - "8000:8000"
+    command: gunicorn wsgi:application --bind 0.0.0.0:8000
+    expose:
+      - "8000"
     depends_on:
       - db
   db:

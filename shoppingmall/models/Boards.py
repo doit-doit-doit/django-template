@@ -1,5 +1,6 @@
 from django.db import models
 from django.http import QueryDict
+from django.db import connection
 
 # Create your models here.
 class Boards(models.Model):
@@ -15,9 +16,13 @@ class Boards(models.Model):
         managed = False
 
 def get_board_list():
-    boards = Boards.objects.all()
+    with connection.cursor() as cursor: 
+        cursor.execute("select * from boards")
+        boards = cursor.fetchall()
     return boards
 
 def get_board_detail(id):
-    board = Boards.objects.filter(id=id)
+    with connection.cursor() as cursor: 
+        cursor.execute("select * from boards where id = 2")
+        board = cursor.fetchone()
     return board
