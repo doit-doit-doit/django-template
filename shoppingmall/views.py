@@ -33,7 +33,7 @@ def health_check(request) :
 
 @api_view(['GET'])
 def login(request):
-    return render(request, 'login.html')
+    return render(request, 'shoppingmall/login.html')
 
 # class BoardViewSet(viewsets.ModelViewSet) :
 #     queryset = Boards.objects.all()
