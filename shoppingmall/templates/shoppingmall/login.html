@@ -7,8 +7,7 @@
     <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
     <script>
         // SDK를 초기화 합니다. 사용할 앱의 JavaScript 키를 설정해 주세요.
-        Kakao.init('31a3b83b7762d9d25fa748754211912a');
-
+        Kakao.init('31a3b83b7762d9d25fa748754211912a'); // 고정 값
         // SDK 초기화 여부를 판단합니다.
         console.log(Kakao.isInitialized());
     </script>
@@ -27,25 +26,53 @@
         redirectUri: 'http://localhost:80/v1/login'
       })
     }
-    // 아래는 데모를 위한 UI 코드입니다.
-    displayToken()
-    function displayToken() {
-      const token = getCookie('authorize-access-token')
-      if(token) {
-        Kakao.Auth.setAccessToken(token)
-        Kakao.Auth.getStatusInfo(({ status }) => {
-          if(status === 'connected') {
-            document.getElementById('token-result').innerText = 'login success. token: ' + Kakao.Auth.getAccessToken()
-          } else {
-            Kakao.Auth.setAccessToken(null)
-          }
+    getAccessTokenByKakao()
+    function getAccessTokenByKakao(){
+      const url = new URL(window.location.href)
+      const urlParams = url.searchParams;
+      const AUTHORIZE_CODE = urlParams.get('code')
+      var ACCESS_TOKEN
+
+      if (AUTHORIZE_CODE) {
+      // POST request using fetch()
+        fetch('https://kauth.kakao.com/oauth/token', {
+          method: 'POST',
+
+          body: new URLSearchParams({
+            grant_type: 'authorization_code', // 고정 값
+            client_id: 'ccf7ea179d5cf10fe1feb1135b81c3d4', // 고정 값
+            redirect_uri: 'http://localhost:80/v1/login',
+            code: AUTHORIZE_CODE,
+          }).toString(),
+
+          // Adding headers to the request
+          headers: {
+            'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+          },
         })
+          .then((response) => response.json())
+          .then((json) => {
+            console.log(json);
+            ACCESS_TOKEN = json.access_token
+            console.log(ACCESS_TOKEN)
+            Kakao.Auth.setAccessToken(ACCESS_TOKEN);
+            // 로그인 성공시, API를 호출합니다.
+                Kakao.API.request({
+                    url: '/v2/user/me',
+                    success: function(res) {
+                        console.log(res); // response 에 뭐있는지 궁금하시면 보심 됩니당
+
+                        var userEmail = res.kakao_account.email;   //유저의 이메일
+                        // console.log(userID);
+                        console.log(userEmail);
+                    },
+                    fail: function(error) {
+                        alert(JSON.stringify(error));
+                    } 
+                });
+          });
       }
-    }
-    function getCookie(name) {
-      const value = "; " + document.cookie;
-      const parts = value.split("; " + name + "=");
-      if (parts.length === 2) return parts.pop().split(";").shift();
+      //console.log(ACCESS_TOKEN)
     }
   </script>
 </body>
