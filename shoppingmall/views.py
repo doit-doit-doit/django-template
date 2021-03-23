@@ -19,15 +19,20 @@ from django.core.serializers import serialize
 
 from datetime import datetime
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
+# TODO : refactoring
+logger = logging.Logger("MYLOG")
+format = "[%(name)s] (%(filename)s:%(lineno)d/%(message)s"
+handler = logging.StreamHandler()
+handler.setFormatter(logging.Formatter(format, datefmt="%Y-%m-%d %H:%M:%S"))
+handler.setLevel(logging.INFO)
+logger.addHandler(handler)
 
 def hello_word(request):
     return render(request, 'shoppingmall/hello_world.html')
 
 @api_view(['GET'])
 def health_check(request) :    
-    logger.info("health checked.")
+    logger.info("health checked) - health checked")
     return HttpResponse()
     
 
@@ -54,7 +59,7 @@ def post(request):
         return HttpResponseServerError()
 
 @api_view(['POST'])
-def commnet(request):
+def comment(request):
     serializer = CommentsSerializer(data=request.data)
     try:
         if serializer.is_valid(raise_exception=True):

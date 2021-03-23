@@ -11,7 +11,7 @@ urlpatterns = [
     path('healthcheck', views.health_check),
     path('login', views.login),
     path('post', views.post),
-    path('comment', views.commnet),
+    path('comment', views.comment),
     path('posts', views.board_list),
     path('postdetail', views.board_detail)
     # url('board', BoardViewSet({'get':'list', 'post':'create'})),
