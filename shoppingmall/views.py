@@ -91,15 +91,16 @@ def board_list(request):
 
 @api_view(['GET'])
 def board_detail(request):
-    id = request.GET.get("id")
-    board = get_board_detail(id)
-    board_list = list(board)
-    board_dict = dict()
-    board_dict['id'] = board[0]
-    board_dict['title'] = board[1]
-    board_dict['name'] = board[2]
-    board_dict['description'] = board[3]
-    board_dict['created_time'] = board[4].strftime("%Y-%m-%d")
+    # id = request.GET.get("id")
+    # board = get_board_detail(id)
+    # board_list = list(board)
+    # board_dict = dict()
+    # board_dict['id'] = board[0]
+    # board_dict['title'] = board[1]
+    # board_dict['name'] = board[2]
+    # board_dict['description'] = board[3]
+    # board_dict['created_time'] = board[4].strftime("%Y-%m-%d")
 
-    response = json.dumps(board_dict)
-    return HttpResponse(response, status=200, content_type="application/json")
+    # response = json.dumps(board_dict)
+    # return HttpResponse(response, status=200, content_type="application/json")
+    return HttpResponse()
