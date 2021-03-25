@@ -99,7 +99,7 @@ def board_detail(request):
     board_dict['title'] = board[1]
     board_dict['name'] = board[2]
     board_dict['description'] = board[3]
-    board_dict['created_time'] = board[4].strftime("%Y-%m-%d %H:%M:%S")
+    board_dict['created_time'] = board[4].strftime("%Y-%m-%d")
 
     response = json.dumps(board_dict)
     return HttpResponse(response, status=200, content_type="application/json")
