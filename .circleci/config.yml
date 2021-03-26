@@ -1,0 +1,57 @@
+version: 2.1
+
+orbs:
+  aws-ecr: circleci/aws-ecr@0.0.4
+  slack: circleci/slack@3.4.2
+
+workflows:
+  build_test_deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: test
+      - aws-ecr/build_and_push_image:
+          requires:
+            - build
+          context: cleanier-test-orders
+          region: ap-northeast-2
+          account-url: ${AWS_ECR_ACCOUNT_URL}
+          tag: ${CIRCLE_BUILD_NUM}
+          repo: ${REPO_NAME}
+          filters:
+            branches:
+              only: test
+
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.8
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "requirements.txt" }} 
+          - v1-dependencies-
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+      - run:
+          name: Set git Commit Message
+          command: |
+              echo 'export GIT_COMMIT_DESC=$(git log --format=oneline -n 1 $CIRCLE_SHA1)' >> $BASH_ENV
+              source $BASH_ENV
+    #   - slack/status: &slack_status
+    #       failure_message: "[FAILED] (<${CIRCLE_BUILD_URL}|${CIRCLE_JOB}>) in <${GIT_URL}${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}> \n${GIT_COMMIT_DESC}"
+    #       success_message: "[SUCCESS] (<${CIRCLE_BUILD_URL}|${CIRCLE_JOB}>) in <${GIT_URL}${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}> \n${GIT_COMMIT_DESC}"
+    #       webhook: 'https://hooks.slack.com/services/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'
+    #       include_visit_job_action: false
